@@ -1,0 +1,6 @@
+function [laplaceImagesTMB, laplaceImagesBMT] = LaplacianPyramid(gaussPyramid)
+    for i=1:length(gaussPyramid - 1)
+       laplaceImagesTMB{i} = gaussPyramid{i} - gaussPyramid{i+1};
+       laplaceImagesBMT{i} = gaussPyramid{i+1} - gaussPyramid{i};
+    end
+end

@@ -1,0 +1,11 @@
+function segmentedEdgePyramid = SegmentImageDerivative(gaussPyramid)
+    varThresh = 255;
+    f = [-1/8 -1/8 -1/8; -1/8 1 -1/8; -1/8 -1/8 -1/8];
+    for i=1:1%length(gaussPyramid)
+        currentImage = gaussPyramid{i};
+        
+        currentImage(currentImage < 0) = 0;
+        currentImage(currentImage > 0) = varThresh;
+        segmentedEdgePyramid{i} = currentImage;
+    end
+end

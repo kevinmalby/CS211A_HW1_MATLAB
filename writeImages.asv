@@ -1,0 +1,26 @@
+function [] = writeImages(imagePath, imageName)
+    currentImage = imread(imagePath);
+    sizeCurImage = size(currentImage);
+    gaussF = [1/4 1/4; 1/4 1/4];
+    laplaceF = [-1/8 -1/8 -1/8; -1/8 1 -1/8; -1/8 -1/8 -1/8];
+    
+    gaussPyramidImagesReduced = gaussPyramid(currentImage, gaussF, sizeCurImage(1), sizeCurImage(2), 2, 2, 0, 1);
+    gaussPyramidImagesSame = gaussPyramid(currentImage, gaussF, sizeCurImage(1), sizeCurImage(2), 2, 2, 1, 1);
+    gaussPyramidImagesSameNonCast = gaussPyramid(currentImage, gaussF, sizeCurImage(1), sizeCurImage(2), 2, 2, 1, 0);
+    [laplaceImagesTMB, laplaceImagesBMT] = LaplacianPyramid(gaussPyramidImagesSameNonCast);
+    secondDerImages = SegmentImageDerivative(gaussPyramidImagesSameNonCast);
+    zeroCrossImages = zeroCrossings(secondDerImages);
+    varThreshImages = VarianceThreshold(zeroCrossImages, secondDerImages, 18000);
+    
+    for i=1:length(gaussPyramidImagesSame)
+       imwrite(gaussPyramidImagesReduced{i},strcat('gaussReduced/',imageName,'_',num2str(i)), 'jpg');
+       imwrite(gaussPyramidImagesSame{i},strcat('gaussSameSize/',imageName,'_',num2str(i)), 'jpg');
+       imwrite(secondDerImages{i},strcat('secondDerivative/',imageName,'_',num2str(i)), 'jpg');
+       imwrite(zeroCrossImages{i},strcat('zeroCrossing/',imageName,'_',num2str(i)), 'jpg');
+       imwrite(varThreshImages{i},strcat('varianceThreshold/',imageName,'_',num2str(i)), 'jpg');
+       if (i < length(laplaceImagesTMB) + 1)
+          imwrite(laplaceImagesTMB{i},strcat('laplaceTopMBottom/',imageName,'_',num2str(i)), 'jpg');
+          imwrite(laplaceImagesBMT{i},strcat('laplaceBottomMTop/',imageName,'_',num2str(i)), 'jpg');
+       end
+    end
+end
