@@ -5,7 +5,7 @@ function segmentedEdgePyramid = SegmentImageDerivative(gaussPyramid)
         currentSize = size(gaussPyramid{i});
         currentImage = gaussPyramid{i};
         currentImage = Convolve(currentImage, f, currentSize(1), currentSize(2), 3, 3);
-        currentImage(currentImage < 0) = 0;
+        currentImage(currentImage <= 0) = 0;
         currentImage(currentImage > 0) = varThresh;
         segmentedEdgePyramid{i} = currentImage;
     end
